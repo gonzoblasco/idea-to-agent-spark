@@ -1,73 +1,83 @@
-# Welcome to your Lovable project
+# InnoTech Agents Platform
 
-## Project info
+Catálogo web para descubrir, analizar y gestionar agentes de IA listos para usar. La aplicación ofrece una experiencia completa desde el landing page hasta el panel privado, con datos servidos por Supabase.
 
-**URL**: https://lovable.dev/projects/fad6a938-9a8d-48f7-bf36-d86b41d780d4
+## Características principales
+- **Landing orientada a conversión**: hero en español, llamadas a la acción y agentes destacados cargados desde Supabase.
+- **Exploración avanzada**: buscador en vivo, filtros por tipo de categoría (profesión o necesidad) y contador de resultados.
+- **Detalle de agente**: ficha enriquecida con configuración del modelo, pasos de workflow, categorías asociadas y acciones rápidas.
+- **Autenticación Supabase**: registro, inicio de sesión y cierre de sesión con preservación de sesión en el navegador.
+- **Dashboard del creador**: métricas de uso, costos estimados, satisfacción promedio y listado de agentes propios.
 
-## How can I edit this code?
+## Tecnologías
+- [Vite](https://vitejs.dev/) + [React 18](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/) y componentes de [shadcn/ui](https://ui.shadcn.com/)
+- [@tanstack/react-query](https://tanstack.com/query/latest) para manejo de caché de datos
+- [Supabase](https://supabase.com/) como backend (autenticación, base de datos Postgres y almacenamiento)
 
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/fad6a938-9a8d-48f7-bf36-d86b41d780d4) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+## Estructura relevante
+```text
+src/
+  assets/               Recursos estáticos (p. ej. hero-bg)
+  components/           UI reutilizable (Navbar, AgentCard, etc.)
+  hooks/                Hooks personalizados
+  integrations/
+    supabase/           Cliente generado y tipado Database
+  lib/                  Contextos y utilidades (AuthProvider)
+  pages/                Rutas principales (Home, Explore, Dashboard...)
+public/                 Archivos servidos por Vite
+supabase/               Configuración de proyecto y migraciones SQL
 ```
 
-**Edit a file directly in GitHub**
+## Requisitos previos
+- Node.js 18 o superior (se recomienda usar `nvm`)
+- Cuenta y proyecto en Supabase para obtener las llaves públicas
+- [Supabase CLI](https://supabase.com/docs/guides/cli) opcional para ejecutar migraciones en local
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Configuración local
+1. Instala dependencias:
+   ```bash
+   npm install
+   ```
+2. Copia el archivo de variables de entorno y complétalo:
+   ```bash
+   cp .env.example .env
+   ```
+   Variables utilizadas:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_PUBLISHABLE_KEY`
+3. Ejecuta el entorno de desarrollo:
+   ```bash
+   npm run dev
+   ```
+4. Para revisar estilos con Tailwind y componentes, mantén abierto el servidor en `http://localhost:5173`.
 
-**Use GitHub Codespaces**
+## Supabase y base de datos
+- El cliente se crea en `src/integrations/supabase/client.ts` con tipado generado automáticamente.
+- El esquema disponible en `src/integrations/supabase/types.ts` refleja las tablas principales (`agents`, `categories`, `agent_executions`, etc.).
+- Migraciones SQL ubicadas en `supabase/migrations/`. Puedes aplicarlas con la CLI:
+  ```bash
+  supabase link --project-ref <project_id>
+  supabase db push
+  ```
+  El `project_id` por defecto se encuentra en `supabase/config.toml`.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Consulta la guía detallada del modelo de datos en [`docs/data-model.md`](docs/data-model.md).
 
-## What technologies are used for this project?
+## Scripts disponibles
+- `npm run dev`: servidor de desarrollo con Vite.
+- `npm run build`: compilación para producción.
+- `npm run build:dev`: build en modo desarrollo (útil para validar warnings).
+- `npm run preview`: previsualización del build.
+- `npm run lint`: ejecuta ESLint sobre el código fuente.
 
-This project is built with:
+## Buenas prácticas del proyecto
+- Mantener el tipado estricto al interactuar con Supabase reutilizando los tipos generados (`Database`).
+- Usar `@tanstack/react-query` para llamadas que requieran caché o estados de carga.
+- Seguir la paleta y componentes base definidos en shadcn/ui para consistencia visual.
+- Validar formularios con `zod` tal como se realiza en la página de autenticación.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/fad6a938-9a8d-48f7-bf36-d86b41d780d4) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## Próximos pasos sugeridos
+- Implementar acciones pendientes en la ficha del agente (clonar, personalizar, ejecutar demo).
+- Completar el flujo de creación de agentes desde el dashboard.
+- Añadir pruebas end-to-end una vez se estabilice la API.
